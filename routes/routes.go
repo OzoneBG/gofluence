@@ -1,0 +1,39 @@
+package routes
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/ozonebg/gofluence/context"
+)
+
+// Route is a representation of a api defined route.
+type Route struct {
+	Name        string
+	Method      string
+	Pattern     string
+	HandlerFunc http.HandlerFunc
+}
+
+// Routes is a collection of api defined routes.
+type Routes []Route
+
+func index(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "REST API: v0.1.0")
+}
+
+func GetRoutes(context *context.Context) Routes {
+	routes := Routes{
+		// Index
+		Route{"Index", "GET", "/", index},
+
+		// Articles
+		Route{"CreateArticle", "POST", "/api/article", context.ArticlesController.CreateArticle},
+		Route{"AllArticles", "GET", "/api/articles", context.ArticlesController.AllArticles},
+		Route{"GetArticle", "GET", "/api/article/{id}", context.ArticlesController.GetArticle},
+		Route{"UpdateArticle", "PUT", "/api/article/{id}", context.ArticlesController.UpdateArticle},
+		Route{"DeleteArticle", "DELETE", "/api/article/{id}", context.ArticlesController.DeleteArticle},
+	}
+
+	return routes
+}
