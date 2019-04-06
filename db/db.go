@@ -15,7 +15,7 @@ func CreateDbConnection() *dbr.Connection {
 	if err != nil {
 		dbLogger.WithError(err).Fatal("failed to connect to database")
 	}
-	conn.SetMaxOpenConns(201)
+	conn.SetMaxOpenConns(30)
 
 	return conn
 }

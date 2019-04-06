@@ -7,11 +7,11 @@ import (
 	"strconv"
 
 	"github.com/ozonebg/gofluence/models"
+	"github.com/ozonebg/gofluence/repository"
 	"github.com/ozonebg/gofluence/utils"
 
 	"github.com/gorilla/mux"
 
-	"github.com/ozonebg/gofluence/dao"
 	"github.com/ozonebg/gofluence/interfaces"
 
 	log "github.com/sirupsen/logrus"
@@ -36,7 +36,7 @@ func (ac *articlesController) AllArticles(w http.ResponseWriter, r *http.Request
 	articles, err := ac.articlesRepository.All()
 
 	if err != nil {
-		if err.Error() == dao.NotFoundArticlesError {
+		if err.Error() == repository.NotFoundArticlesError {
 			articleLogger.Info("no articles found")
 			json.NewEncoder(w).Encode(articles)
 			return

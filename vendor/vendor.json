@@ -1,0 +1,55 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "eCp2tQH8V3GZhJykFIrFyIeTsMs=",
+			"path": "github.com/gocraft/dbr",
+			"revision": "48a049970bd235145507f94604005bb7eb9c8bb4",
+			"revisionTime": "2019-01-31T14:57:10Z"
+		},
+		{
+			"checksumSHA1": "94w/u3XwQogfVXUl4BNqHHxm8gY=",
+			"path": "github.com/gocraft/dbr/dialect",
+			"revision": "48a049970bd235145507f94604005bb7eb9c8bb4",
+			"revisionTime": "2019-01-31T14:57:10Z"
+		},
+		{
+			"checksumSHA1": "4buQslF20IWRfGgbUnYLgNI5Zlo=",
+			"path": "github.com/gorilla/mux",
+			"revision": "c5c6c98bc25355028a63748a498942a6398ccd22",
+			"revisionTime": "2019-03-16T13:32:43Z"
+		},
+		{
+			"checksumSHA1": "Z7rkupTQRAZzzTCqDLiSbNR70to=",
+			"path": "github.com/konsorten/go-windows-terminal-sequences",
+			"revision": "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e",
+			"revisionTime": "2019-02-26T22:47:05Z"
+		},
+		{
+			"checksumSHA1": "XRkn1/ceRor0E0YrH5pHBRCiI+Q=",
+			"path": "github.com/lib/pq",
+			"revision": "d6156e141ac6c06345c7c73f450987a9ed4b751f",
+			"revisionTime": "2019-03-26T04:20:56Z"
+		},
+		{
+			"checksumSHA1": "GX2hcQP8YqrXH+laJJIxUFsqoxU=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "d6156e141ac6c06345c7c73f450987a9ed4b751f",
+			"revisionTime": "2019-03-26T04:20:56Z"
+		},
+		{
+			"checksumSHA1": "nZmomVnH99FHJcq01PN+ayviWPk=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "9b3cdde74fbe9443d704467498a7dcb61a79de9b",
+			"revisionTime": "2019-04-03T09:10:19Z"
+		},
+		{
+			"checksumSHA1": "bT10QLuuOvB2mOA1XyYGzfVpXYg=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "4b34438f7a67ee5f45cc6132e2bad873a20324e9",
+			"revisionTime": "2019-04-05T15:09:22Z"
+		}
+	],
+	"rootPath": "github.com/ozonebg/gofluence"
+}

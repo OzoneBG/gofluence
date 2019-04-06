@@ -5,7 +5,7 @@ import (
 
 	"github.com/ozonebg/gofluence/context"
 	"github.com/ozonebg/gofluence/controllers"
-	"github.com/ozonebg/gofluence/dao"
+	"github.com/ozonebg/gofluence/repository"
 	"github.com/ozonebg/gofluence/routes"
 	log "github.com/sirupsen/logrus"
 )
@@ -16,7 +16,7 @@ func main() {
 	context := context.NewContext()
 
 	// instantiate repositories
-	context.ArticlesRepository = dao.NewArticlesDao()
+	context.ArticlesRepository = repository.NewArticlesDao()
 
 	// insitantiate deps
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)
