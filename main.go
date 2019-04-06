@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/ozonebg/gofluence/context"
 	"github.com/ozonebg/gofluence/controllers"
@@ -18,6 +19,10 @@ func main() {
 
 	if port == "" {
 		logger.Fatal("$PORT must be set")
+	}
+
+	if !strings.HasPrefix(port, ":") {
+		port = ":" + port
 	}
 
 	logger.WithField("port", port).Info("current env port value")
