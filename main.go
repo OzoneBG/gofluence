@@ -22,6 +22,6 @@ func main() {
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)
 
 	router := routes.NewRouter(context)
-	logger.Info("Starting HTTP server listening on port 8080")
-	logger.Fatal(http.ListenAndServe(":8080", router))
+	logger.Info("Starting HTTP server listening on port 80")
+	logger.Fatal(http.ListenAndServe(":80", router))
 }
