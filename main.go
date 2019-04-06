@@ -20,6 +20,8 @@ func main() {
 		logger.Fatal("$PORT must be set")
 	}
 
+	logger.WithField("port", port).Info("current env port value")
+
 	context := context.NewContext()
 
 	// instantiate repositories
@@ -29,6 +31,6 @@ func main() {
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)
 
 	router := routes.NewRouter(context)
-	logger.Info("Starting HTTP server listening on port 80")
+	logger.Infof("Starting HTTP server listening on port %v", port)
 	logger.Fatal(http.ListenAndServe(port, router))
 }
