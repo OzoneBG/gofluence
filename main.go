@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/ozonebg/gofluence/context"
 	"github.com/ozonebg/gofluence/controllers"
@@ -13,6 +14,12 @@ import (
 var logger = log.WithField("component", "main")
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		logger.Fatal("$PORT must be set")
+	}
+
 	context := context.NewContext()
 
 	// instantiate repositories
@@ -23,5 +30,5 @@ func main() {
 
 	router := routes.NewRouter(context)
 	logger.Info("Starting HTTP server listening on port 80")
-	logger.Fatal(http.ListenAndServe(":80", router))
+	logger.Fatal(http.ListenAndServe(port, router))
 }
