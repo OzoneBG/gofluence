@@ -8,6 +8,9 @@ import (
 type Context struct {
 	ArticlesController interfaces.ArticlesController
 	ArticlesRepository interfaces.ArticlesRepository
+
+	UsersController interfaces.UsersController
+	UsersRepository interfaces.UsersRepository
 }
 
 // NewContext creates a new context

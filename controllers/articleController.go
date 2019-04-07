@@ -77,6 +77,7 @@ func (ac *articlesController) CreateArticle(w http.ResponseWriter, r *http.Reque
 
 	var article models.Article
 	json.Unmarshal(body, &article)
+	articleLogger.Info(article.AuthorID)
 
 	err = ac.articlesRepository.CreateArticle(&article)
 	if err != nil {

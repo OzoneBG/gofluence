@@ -16,19 +16,15 @@ var logger = log.WithField("component", "main")
 func main() {
 	port := config.GetPort()
 
-	logger.WithFields(log.Fields{
-		"db_name": config.GetDBName(),
-		"db_pass": config.GetDBPassword(),
-		"db_user": config.GetDBUser(),
-	}).Info("database env variables")
-
 	context := context.NewContext()
 
 	// instantiate repositories
 	context.ArticlesRepository = repository.NewArticlesDao()
+	context.UsersRepository = repository.NewUsersDao()
 
 	// insitantiate deps
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)
+	context.UsersController = controllers.NewUsersController(context.UsersRepository)
 
 	router := routes.NewRouter(context)
 	logger.WithField("port", port).Infof("Starting HTTP server listening")

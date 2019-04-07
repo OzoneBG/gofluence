@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	tableName = "articles"
+	articlesTableName = "articles"
 
 	// NotFoundArticlesError is error if no article is found.
 	NotFoundArticlesError = "no articles found"
@@ -40,7 +40,7 @@ func (a *articlesDao) All() (models.Articles, error) {
 	defer tx.RollbackUnlessCommitted()
 
 	var articles models.Articles
-	tx.Select("*").From(tableName).Load(&articles)
+	tx.Select("*").From(articlesTableName).Load(&articles)
 
 	err = tx.Commit()
 	if err != nil {
@@ -64,7 +64,7 @@ func (a *articlesDao) GetArticle(id int) (*models.Article, error) {
 	defer tx.RollbackUnlessCommitted()
 
 	var article models.Article
-	result, err := tx.Select("*").From(tableName).Where("id = ?", id).Load(&article)
+	result, err := tx.Select("*").From(articlesTableName).Where("id = ?", id).Load(&article)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (a *articlesDao) CreateArticle(article *models.Article) error {
 	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
-	_, err = tx.InsertInto(tableName).Columns("title", "content").Record(article).Exec()
+	_, err = tx.InsertInto(articlesTableName).Columns("title", "content", "author_id").Record(article).Exec()
 	if err != nil {
 		return err
 	}
@@ -113,7 +113,7 @@ func (a *articlesDao) DeleteArticle(id int) error {
 	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
-	_, err = tx.DeleteFrom(tableName).Where("id = ?", id).Exec()
+	_, err = tx.DeleteFrom(articlesTableName).Where("id = ?", id).Exec()
 	if err != nil {
 		return err
 	}
@@ -130,9 +130,9 @@ func (a *articlesDao) UpdateArticle(id int, updatedArticle *models.Article) erro
 	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
-	updateMap := getUpdateMap(updatedArticle)
+	updateMap := getUpdateMapForArticle(updatedArticle)
 
-	_, err = tx.Update(tableName).Where("id = ?", id).SetMap(updateMap).Exec()
+	_, err = tx.Update(articlesTableName).Where("id = ?", id).SetMap(updateMap).Exec()
 	if err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func (a *articlesDao) UpdateArticle(id int, updatedArticle *models.Article) erro
 }
 
 // getUpdateMap returns a new map containing all updated values
-func getUpdateMap(article *models.Article) map[string]interface{} {
+func getUpdateMapForArticle(article *models.Article) map[string]interface{} {
 	updateMap := make(map[string]interface{}, 3)
 	updateMap["title"] = article.Title
 	updateMap["content"] = article.Content
