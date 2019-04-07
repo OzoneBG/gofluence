@@ -23,13 +23,13 @@ type articlesController struct {
 	articlesRepository interfaces.ArticlesRepository
 }
 
+// NewArticlesController returns a new controller for the articles.
 func NewArticlesController(articlesDao interfaces.ArticlesRepository) interfaces.ArticlesController {
 	return &articlesController{
 		articlesRepository: articlesDao,
 	}
 }
 
-// AllArticles returns all articles.
 func (ac *articlesController) AllArticles(w http.ResponseWriter, r *http.Request) {
 	articleLogger.Info("endpoint hit: all articles")
 
@@ -70,12 +70,15 @@ func (ac *articlesController) GetArticle(w http.ResponseWriter, r *http.Request)
 func (ac *articlesController) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	articleLogger.Info("endpoint hit: create article")
 
-	body := utils.ReadRequestBody(r)
+	body, err := utils.ReadRequestBody(r)
+	if err != nil {
+		articleLogger.WithError(err).Info("failed to read body contents")
+	}
 
 	var article models.Article
 	json.Unmarshal(body, &article)
 
-	err := ac.articlesRepository.CreateArticle(&article)
+	err = ac.articlesRepository.CreateArticle(&article)
 	if err != nil {
 		articleLogger.WithError(err).Info("failed to create article")
 	}
@@ -95,7 +98,12 @@ func (ac *articlesController) UpdateArticle(w http.ResponseWriter, r *http.Reque
 	}
 
 	var updatedArticle models.Article
-	json.Unmarshal(utils.ReadRequestBody(r), &updatedArticle)
+	body, err := utils.ReadRequestBody(r)
+	if err != nil {
+		articleLogger.WithError(err).Info("failed to read body contents")
+	}
+
+	json.Unmarshal(body, &updatedArticle)
 
 	err = ac.articlesRepository.UpdateArticle(id, &updatedArticle)
 	if err != nil {

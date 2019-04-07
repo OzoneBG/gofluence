@@ -11,9 +11,13 @@ import (
 )
 
 const (
-	tableName             = "articles"
+	tableName = "articles"
+
+	// NotFoundArticlesError is error if no article is found.
 	NotFoundArticlesError = "no articles found"
-	InvalidDataError      = "invalid data"
+
+	// InvalidDataError is error if input data is invalid.
+	InvalidDataError = "invalid data"
 )
 
 var daoLogger = logrus.WithField("component", "articles dao")
@@ -136,6 +140,7 @@ func (a *articlesDao) UpdateArticle(id int, updatedArticle *models.Article) erro
 	return tx.Commit()
 }
 
+// getUpdateMap returns a new map containing all updated values
 func getUpdateMap(article *models.Article) map[string]interface{} {
 	updateMap := make(map[string]interface{}, 3)
 	updateMap["title"] = article.Title

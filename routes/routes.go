@@ -22,6 +22,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "REST API: v0.1.0")
 }
 
+// GetRoutes returns all api-defined routes.
 func GetRoutes(context *context.Context) Routes {
 	routes := Routes{
 		// Index

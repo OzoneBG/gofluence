@@ -2,9 +2,8 @@ package main
 
 import (
 	"net/http"
-	"os"
-	"strings"
 
+	"github.com/ozonebg/gofluence/config"
 	"github.com/ozonebg/gofluence/context"
 	"github.com/ozonebg/gofluence/controllers"
 	"github.com/ozonebg/gofluence/repository"
@@ -15,17 +14,13 @@ import (
 var logger = log.WithField("component", "main")
 
 func main() {
-	port := os.Getenv("PORT")
+	port := config.GetPort()
 
-	if port == "" {
-		logger.Fatal("$PORT must be set")
-	}
-
-	if !strings.HasPrefix(port, ":") {
-		port = ":" + port
-	}
-
-	logger.WithField("port", port).Info("current env port value")
+	logger.WithFields(log.Fields{
+		"db_name": config.GetDBName(),
+		"db_pass": config.GetDBPassword(),
+		"db_user": config.GetDBUser(),
+	}).Info("database env variables")
 
 	context := context.NewContext()
 
@@ -36,6 +31,6 @@ func main() {
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)
 
 	router := routes.NewRouter(context)
-	logger.Infof("Starting HTTP server listening on port %v", port)
+	logger.WithField("port", port).Infof("Starting HTTP server listening")
 	logger.Fatal(http.ListenAndServe(port, router))
 }
