@@ -31,6 +31,7 @@ type UsersController interface {
 	GetUser(w http.ResponseWriter, r *http.Request)
 	UpdateUser(w http.ResponseWriter, r *http.Request)
 	DeleteUser(w http.ResponseWriter, r *http.Request)
+	Authenticate(w http.ResponseWriter, r *http.Request)
 }
 
 // UsersRepository is a provider for users.
@@ -40,4 +41,5 @@ type UsersRepository interface {
 	GetUser(int) (*models.User, error)
 	UpdateUser(int, *models.User) error
 	DeleteUser(int) error
+	GetUserByUsername(string) (*models.User, error)
 }

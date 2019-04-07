@@ -36,11 +36,12 @@ func GetRoutes(context *context.Context) Routes {
 		Route{"DeleteArticle", "DELETE", "/api/article/{id}", context.ArticlesController.DeleteArticle},
 
 		// Users
-		Route{"CreateUser", "POST", "/api/user", context.UsersController.CreateUser},
+		Route{"CreateUser", "POST", "/api/user/new", context.UsersController.CreateUser},
 		Route{"AllUsers", "GET", "/api/users", context.UsersController.AllUsers},
 		Route{"GetUser", "GET", "/api/user/{id}", context.UsersController.GetUser},
 		Route{"UpdateUser", "PUT", "/api/user/{id}", context.UsersController.UpdateUser},
 		Route{"DeleteUser", "DELETE", "/api/user/{id}", context.UsersController.DeleteUser},
+		Route{"Authenticate", "POST", "/api/login", context.UsersController.Authenticate},
 	}
 
 	return routes

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/ozonebg/gofluence/db"
 	"github.com/ozonebg/gofluence/interfaces"
@@ -90,6 +91,9 @@ func (a *usersDao) CreateUser(user *models.User) error {
 	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
+	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	user.Password = string(hashedPass)
+
 	_, err = tx.InsertInto(usersTableName).Columns("username", "password", "email").Record(user).Exec()
 	if err != nil {
 		return err
@@ -141,4 +145,31 @@ func getUpdateMapForUser(user *models.User) map[string]interface{} {
 	updateMap["email"] = user.Email
 
 	return updateMap
+}
+
+func (a *usersDao) GetUserByUsername(username string) (*models.User, error) {
+	conn := db.CreateDbConnection()
+	tx, err := conn.NewSession(nil).Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+	defer tx.RollbackUnlessCommitted()
+
+	var user models.User
+	result, err := tx.Select("*").From(usersTableName).Where("username = ?", username).Load(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	if result != 1 {
+		return nil, errors.New(NotFoundUsersError)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

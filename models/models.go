@@ -1,5 +1,7 @@
 package models
 
+import jwt "github.com/dgrijalva/jwt-go"
+
 // Article represent a single article in the application.
 type Article struct {
 	ID       int    `json:"id"`
@@ -21,3 +23,15 @@ type User struct {
 
 // Users represent a collection of users in the application.
 type Users []User
+
+// Token represents the user token
+type Token struct {
+	UserID int
+	jwt.StandardClaims
+}
+
+// AuthModel is the model to store user credentials
+type AuthModel struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

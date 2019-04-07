@@ -56,3 +56,14 @@ func GetDBPassword() string {
 
 	return dbPwd
 }
+
+// GetTokenPassword returns the token password env variable
+func GetTokenPassword() string {
+	tokenPwd := os.Getenv("TOKEN_PWD")
+
+	if tokenPwd == "" {
+		configLogger.Fatal("$TOKEN_PWD must be set")
+	}
+
+	return tokenPwd
+}

@@ -6,12 +6,15 @@ import (
 	"net/http"
 	"strconv"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/ozonebg/gofluence/config"
 	"github.com/ozonebg/gofluence/interfaces"
 	"github.com/ozonebg/gofluence/models"
 	"github.com/ozonebg/gofluence/repository"
-	"github.com/ozonebg/gofluence/utils"
+	u "github.com/ozonebg/gofluence/utils"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var usersLogger = log.WithField("component", "users controller")
@@ -67,7 +70,7 @@ func (uc *userController) GetUser(w http.ResponseWriter, r *http.Request) {
 func (uc *userController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	usersLogger.Info("endpoint hit: create user")
 
-	body, err := utils.ReadRequestBody(r)
+	body, err := u.ReadRequestBody(r)
 	if err != nil {
 		usersLogger.WithError(err).Info("failed to read body contents")
 	}
@@ -93,7 +96,7 @@ func (uc *userController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var updatedUser models.User
-	body, err := utils.ReadRequestBody(r)
+	body, err := u.ReadRequestBody(r)
 	if err != nil {
 		usersLogger.WithError(err).Info("failed to read body contents")
 	}
@@ -121,4 +124,45 @@ func (uc *userController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		usersLogger.WithError(err).Info("failed to delete user")
 	}
+}
+
+func (uc *userController) Authenticate(w http.ResponseWriter, r *http.Request) {
+	usersLogger.Info("endpoint hit: auth user")
+
+	var credentials models.AuthModel
+	body, err := u.ReadRequestBody(r)
+	if err != nil {
+		usersLogger.WithError(err).Info("failed to read body contents")
+	}
+
+	json.Unmarshal(body, &credentials)
+
+	user, err := uc.usersRepository.GetUserByUsername(credentials.Username)
+	if err != nil {
+		usersLogger.WithError(err).Info("failed to authenticate user")
+	}
+
+	if user == nil {
+		resp := u.Message(false, "no user information found")
+		u.Respond(w, resp)
+		return
+	}
+
+	// Found a user compare password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(credentials.Password))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
+		resp := u.Message(false, "Invalid login credentials. Please try again")
+		u.Respond(w, resp)
+		return
+	}
+
+	//Create JWT token
+	tk := &models.Token{UserID: user.ID}
+	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+	tokenString, _ := token.SignedString([]byte(config.GetTokenPassword()))
+
+	resp := u.Message(true, "Logged In")
+	resp["token"] = tokenString
+
+	u.Respond(w, resp)
 }

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
@@ -13,4 +14,13 @@ func ReadRequestBody(r *http.Request) ([]byte, error) {
 	}
 
 	return b, nil
+}
+
+func Message(status bool, message string) map[string]interface{} {
+	return map[string]interface{}{"status": status, "message": message}
+}
+
+func Respond(w http.ResponseWriter, data map[string]interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
 }
