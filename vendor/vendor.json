@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "blOHP3HPYU+IeV6yWCalQuuM+zE=",
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "3af4c746e1c248ee8491a3e0c6f7a9cd831e95f8",
+			"revisionTime": "2018-09-21T17:23:15Z"
+		},
+		{
 			"checksumSHA1": "eCp2tQH8V3GZhJykFIrFyIeTsMs=",
 			"path": "github.com/gocraft/dbr",
 			"revision": "48a049970bd235145507f94604005bb7eb9c8bb4",
@@ -43,6 +49,18 @@
 			"path": "github.com/sirupsen/logrus",
 			"revision": "9b3cdde74fbe9443d704467498a7dcb61a79de9b",
 			"revisionTime": "2019-04-03T09:10:19Z"
+		},
+		{
+			"checksumSHA1": "oCH3J96RWvO8W4xjix47PModpio=",
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "88737f569e3a9c7ab309cdc09a07fe7fc87233c3",
+			"revisionTime": "2019-04-11T09:50:52Z"
+		},
+		{
+			"checksumSHA1": "q+XI9g44wd9mYvf3S5Wo8YZjAus=",
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "88737f569e3a9c7ab309cdc09a07fe7fc87233c3",
+			"revisionTime": "2019-04-11T09:50:52Z"
 		},
 		{
 			"checksumSHA1": "bT10QLuuOvB2mOA1XyYGzfVpXYg=",
