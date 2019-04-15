@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/ozonebg/gofluence/db"
 
 	"github.com/ozonebg/gofluence/config"
 	"github.com/ozonebg/gofluence/context"
@@ -18,9 +21,14 @@ func main() {
 
 	context := context.NewContext()
 
+	dsn := fmt.Sprintf("user=%v dbname=%v sslmode=disable password=%v", config.GetDBUser(), config.GetDBName(), config.GetDBPassword())
+	session := db.CreateDbConnection(dsn)
+	defer session.Close()
+	defer session.Connection.Close()
+
 	// instantiate repositories
-	context.ArticlesRepository = repository.NewArticlesDao()
-	context.UsersRepository = repository.NewUsersDao()
+	context.ArticlesRepository = repository.NewArticlesDao(session)
+	context.UsersRepository = repository.NewUsersDao(session)
 
 	// insitantiate deps
 	context.ArticlesController = controllers.NewArticlesController(context.ArticlesRepository)

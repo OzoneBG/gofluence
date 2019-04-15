@@ -3,9 +3,10 @@ package repository
 import (
 	"errors"
 
+	"github.com/gocraft/dbr"
+
 	"github.com/sirupsen/logrus"
 
-	"github.com/ozonebg/gofluence/db"
 	"github.com/ozonebg/gofluence/interfaces"
 	"github.com/ozonebg/gofluence/models"
 )
@@ -23,20 +24,21 @@ const (
 var daoLogger = logrus.WithField("component", "articles dao")
 
 type articlesDao struct {
+	s *dbr.Session
 }
 
 // NewArticlesDao returns new ArticlesRepository
-func NewArticlesDao() interfaces.ArticlesRepository {
-	return &articlesDao{}
+func NewArticlesDao(session *dbr.Session) interfaces.ArticlesRepository {
+	return &articlesDao{
+		s: session,
+	}
 }
 
 func (a *articlesDao) All() (models.Articles, error) {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	var articles models.Articles
@@ -55,12 +57,10 @@ func (a *articlesDao) All() (models.Articles, error) {
 }
 
 func (a *articlesDao) GetArticle(id int) (*models.Article, error) {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	var article models.Article
@@ -88,12 +88,10 @@ func (a *articlesDao) CreateArticle(article *models.Article) error {
 		return errors.New(InvalidDataError)
 	}
 
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	_, err = tx.InsertInto(articlesTableName).Columns("title", "content", "author_id").Record(article).Exec()
@@ -105,12 +103,10 @@ func (a *articlesDao) CreateArticle(article *models.Article) error {
 }
 
 func (a *articlesDao) DeleteArticle(id int) error {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	_, err = tx.DeleteFrom(articlesTableName).Where("id = ?", id).Exec()
@@ -122,12 +118,10 @@ func (a *articlesDao) DeleteArticle(id int) error {
 }
 
 func (a *articlesDao) UpdateArticle(id int, updatedArticle *models.Article) error {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	updateMap := getUpdateMapForArticle(updatedArticle)

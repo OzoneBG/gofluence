@@ -3,10 +3,11 @@ package repository
 import (
 	"errors"
 
+	"github.com/gocraft/dbr"
+
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/ozonebg/gofluence/db"
 	"github.com/ozonebg/gofluence/interfaces"
 	"github.com/ozonebg/gofluence/models"
 )
@@ -21,20 +22,21 @@ const (
 var usersRepositoryLogger = logrus.WithField("component", "users dao")
 
 type usersDao struct {
+	s *dbr.Session
 }
 
 // NewUsersDao returns new UsersRepository
-func NewUsersDao() interfaces.UsersRepository {
-	return &usersDao{}
+func NewUsersDao(session *dbr.Session) interfaces.UsersRepository {
+	return &usersDao{
+		s: session,
+	}
 }
 
 func (a *usersDao) All() (models.Users, error) {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	var users models.Users
@@ -53,12 +55,10 @@ func (a *usersDao) All() (models.Users, error) {
 }
 
 func (a *usersDao) GetUser(id int) (*models.User, error) {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	var user models.User
@@ -83,12 +83,10 @@ func (a *usersDao) CreateUser(user *models.User) error {
 	if user == nil {
 		return errors.New(InvalidDataError)
 	}
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -103,12 +101,10 @@ func (a *usersDao) CreateUser(user *models.User) error {
 }
 
 func (a *usersDao) DeleteUser(id int) error {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	_, err = tx.DeleteFrom(usersTableName).Where("id = ?", id).Exec()
@@ -120,12 +116,10 @@ func (a *usersDao) DeleteUser(id int) error {
 }
 
 func (a *usersDao) UpdateUser(id int, updatedUser *models.User) error {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	updateMap := getUpdateMapForUser(updatedUser)
@@ -148,12 +142,10 @@ func getUpdateMapForUser(user *models.User) map[string]interface{} {
 }
 
 func (a *usersDao) GetUserByUsername(username string) (*models.User, error) {
-	conn := db.CreateDbConnection()
-	tx, err := conn.NewSession(nil).Begin()
+	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	defer tx.RollbackUnlessCommitted()
 
 	var user models.User
