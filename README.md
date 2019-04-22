@@ -11,6 +11,15 @@ ables that is:
 * DB_NAME - database name
 * TOKEN_PWD - token password
 
+# Building and running
+Right now it doesn't work properly but:
+to build the docker image
+
+`docker build -t gofluence .`
+
+To run it:
+`docker run -p 8080:8081 -it my-go-app`
+
 # TODO
 - [ ] Rename environment variables to be more clear and readable
 - [ ] Setup `docker-compose` to work with both the app and `PostgreSQL`
