@@ -23,3 +23,4 @@ To run it:
 # TODO
 - [ ] Rename environment variables to be more clear and readable
 - [ ] Setup `docker-compose` to work with both the app and `PostgreSQL`
+- [ ] Update api to return articles with the username and id
