@@ -1,0 +1,22 @@
+version: "2"
+services:
+  db:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_PWD: gofluencer
+      POSTGRES_USER: gofluence
+      POSTGRES_DB: gofluence
+  api:
+    build:
+      context: ./
+      args:
+        app_env: ${APP_ENV}
+    volumes:
+      - ./:/go/src/github.com/ozonebg/gofluence/
+    ports:
+      - "8080:8081"
+    links:
+      - db

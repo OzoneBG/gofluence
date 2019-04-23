@@ -18,7 +18,7 @@ to build the docker image
 `docker build -t gofluence .`
 
 To run it:
-`docker run -p 8080:8081 -it my-go-app`
+`docker run -p 8080:8081 -it gofluence`
 
 # TODO
 - [ ] Rename environment variables to be more clear and readable
