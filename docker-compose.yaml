@@ -6,17 +6,22 @@ services:
     ports:
       - "5435:5432"
     environment:
-      POSTGRES_PWD: gofluencer
+      POSTGRES_PASSWORD: gofluencer
       POSTGRES_USER: gofluence
       POSTGRES_DB: gofluence
   api:
-    build:
-      context: ./
-      args:
-        app_env: ${APP_ENV}
+    container_name: gofluence
+    build: .
+    command: go run main.go
     volumes:
       - ./:/go/src/github.com/ozonebg/gofluence/
     ports:
       - "8080:8081"
-    links:
+    environment:
+      DB_USER: gofluence
+      DB_NAME: gofluence
+      DB_PWD: gofluencer
+      PORT: 8081
+      TOKEN_PWD: myverylonghashedpassword
+    depends_on:
       - db

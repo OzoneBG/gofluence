@@ -3,10 +3,10 @@ package middleware
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/ozonebg/gofluence/config"
 	"github.com/ozonebg/gofluence/models"
 	u "github.com/ozonebg/gofluence/utils"
 )
@@ -52,7 +52,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		tk := &models.Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
-			return []byte(os.Getenv("token_password")), nil
+			return []byte(config.GetTokenPassword()), nil
 		})
 
 		if err != nil { //Malformed token, returns with http code 403 as usual
