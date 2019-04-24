@@ -2,7 +2,7 @@ version: "2"
 services:
   db:
     restart: always
-    image: postgres:latest
+    image: postgres:11.2-alpine
     ports:
       - "5435:5432"
     environment:
@@ -10,6 +10,7 @@ services:
       POSTGRES_USER: gofluence
       POSTGRES_DB: gofluence
   api:
+    restart: always
     container_name: gofluence
     build: .
     command: go run main.go
