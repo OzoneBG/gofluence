@@ -12,15 +12,14 @@ ables that is:
 * TOKEN_PWD - token password
 
 # Building and running
-Right now it doesn't work properly but:
-to build the docker image
+## To run the application on docker:
+`docker-compose up`
 
-`docker build -t gofluence .`
+## To build the application and run it locally
+`make`
 
-To run it:
-`docker run -p 8080:8081 -it gofluence`
 
 # TODO
 - [ ] Rename environment variables to be more clear and readable
-- [ ] Setup `docker-compose` to work with both the app and `PostgreSQL`
+- [X] Setup `docker-compose` to work with both the app and `PostgreSQL`
 - [ ] Update api to return articles with the username and id
