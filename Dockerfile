@@ -7,7 +7,7 @@ COPY . /go/src/github.com/ozonebg/gofluence
 # Use the current dir as workdir
 WORKDIR /go/src/github.com/ozonebg/gofluence
 
-# BUild the project
+# Build the project
 RUN go build -o main .
 
 # Run the project

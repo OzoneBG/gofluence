@@ -22,7 +22,8 @@ services:
       DB_USER: gofluence
       DB_NAME: gofluence
       DB_PWD: gofluencer
-      PORT: 8081
+      HTTP_PORT: 8081
       TOKEN_PWD: myverylonghashedpassword
+      GRPC_PORT: 9090
     depends_on:
       - db

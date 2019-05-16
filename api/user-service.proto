@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package api;
+
+// import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+service UserService {
+    rpc All(AllUsersRequest) returns (AllUsersResponse) {
+        option (google.api.http) = {
+            get: "/api/user/all"
+        };
+    }
+
+    rpc Get(GetUserRequest) returns (GetUserResponse) {
+        option (google.api.http) = {
+            get: "/api/user/{id}"
+        };
+    }
+
+    rpc Create(CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/api/user"
+            body: "*"
+        };
+    }
+
+    rpc Update(UpdateUserRequest) returns (UpdateUserResponse) {
+        option (google.api.http) = {
+            put: "/api/user/{id}"
+            body: "*"
+        };
+    }
+
+    rpc Delete(DeleteUserRequest) returns (DeleteUserResponse) {
+        option (google.api.http) = {
+            delete: "/api/user/{id}"
+        };
+    }
+
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
+        option (google.api.http) = {
+            post: "/api/login"
+            body: "*"
+        };
+    }
+}
+
+message User {
+    int32 id = 1;
+    string username = 2;
+    string password = 3;
+    string email = 4;
+}
+
+message AllUsersRequest {
+}
+
+message AllUsersResponse {
+    repeated User users = 1;
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message CreateUserRequest {
+    string username = 1;
+    string password = 2;
+    string email = 3;
+}
+
+message CreateUserResponse {
+    int32 id = 1;
+    bool success = 2;
+}
+
+message UpdateUserRequest {
+    int32 id = 1;
+    string username = 2;
+    string email = 3;
+}
+
+message UpdateUserResponse {
+    int32 id = 1;
+    bool success = 2;
+}
+
+message DeleteUserRequest {
+    int32 id = 1;
+}
+
+message DeleteUserResponse {
+    bool success = 1;
+}
+
+message AuthenticateRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message AuthenticateResponse {
+    bool success = 1;
+    string error = 2;
+    string token = 3;
+}

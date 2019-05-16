@@ -1,0 +1,2 @@
+protoc --proto_path=api --proto_path=third_party --go_out=plugins=grpc:pkg/api user-service.proto
+protoc --proto_path=api --proto_path=third_party --grpc-gateway_out=logtostderr=true:pkg/api user-service.proto
