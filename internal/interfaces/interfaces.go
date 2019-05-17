@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ozonebg/gofluence/internal/models"
+	"github.com/ozonebg/gofluence/pkg/api"
 )
 
 // ArticlesController will provide the articles interaction interface for the API.
@@ -24,22 +25,12 @@ type ArticlesRepository interface {
 	DeleteArticle(int) error
 }
 
-// UsersController will provide the user interaction interface for the API.
-type UsersController interface {
-	CreateUser(w http.ResponseWriter, r *http.Request)
-	AllUsers(w http.ResponseWriter, r *http.Request)
-	GetUser(w http.ResponseWriter, r *http.Request)
-	UpdateUser(w http.ResponseWriter, r *http.Request)
-	DeleteUser(w http.ResponseWriter, r *http.Request)
-	Authenticate(w http.ResponseWriter, r *http.Request)
-}
-
 // UsersRepository is a provider for users.
 type UsersRepository interface {
-	CreateUser(*models.User) error
-	All() (models.Users, error)
-	GetUser(int) (*models.User, error)
-	UpdateUser(int, *models.User) error
+	CreateUser(*api.User) error
+	All() ([]*api.User, error)
+	GetUser(int) (*api.User, error)
+	UpdateUser(int, *api.User) error
 	DeleteUser(int) error
-	GetUserByUsername(string) (*models.User, error)
+	GetUserByUsername(string) (*api.User, error)
 }

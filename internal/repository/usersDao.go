@@ -9,7 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/ozonebg/gofluence/internal/interfaces"
-	"github.com/ozonebg/gofluence/internal/models"
+	"github.com/ozonebg/gofluence/pkg/api"
 )
 
 const (
@@ -32,14 +32,14 @@ func NewUsersDao(session *dbr.Session) interfaces.UsersRepository {
 	}
 }
 
-func (a *usersDao) All() (models.Users, error) {
+func (a *usersDao) All() ([]*api.User, error) {
 	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
 	defer tx.RollbackUnlessCommitted()
 
-	var users models.Users
+	var users []*api.User
 	tx.Select("*").From(usersTableName).Load(&users)
 
 	err = tx.Commit()
@@ -48,20 +48,20 @@ func (a *usersDao) All() (models.Users, error) {
 	}
 
 	if users == nil {
-		return models.Users{}, errors.New(NotFoundUsersError)
+		return nil, errors.New(NotFoundUsersError)
 	}
 
 	return users, nil
 }
 
-func (a *usersDao) GetUser(id int) (*models.User, error) {
+func (a *usersDao) GetUser(id int) (*api.User, error) {
 	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
 	defer tx.RollbackUnlessCommitted()
 
-	var user models.User
+	var user api.User
 	result, err := tx.Select("*").From(usersTableName).Where("id = ?", id).Load(&user)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (a *usersDao) GetUser(id int) (*models.User, error) {
 	return &user, nil
 }
 
-func (a *usersDao) CreateUser(user *models.User) error {
+func (a *usersDao) CreateUser(user *api.User) error {
 	if user == nil {
 		return errors.New(InvalidDataError)
 	}
@@ -115,7 +115,7 @@ func (a *usersDao) DeleteUser(id int) error {
 	return tx.Commit()
 }
 
-func (a *usersDao) UpdateUser(id int, updatedUser *models.User) error {
+func (a *usersDao) UpdateUser(id int, updatedUser *api.User) error {
 	tx, err := a.s.Begin()
 	if err != nil {
 		return err
@@ -132,23 +132,22 @@ func (a *usersDao) UpdateUser(id int, updatedUser *models.User) error {
 	return tx.Commit()
 }
 
-func getUpdateMapForUser(user *models.User) map[string]interface{} {
+func getUpdateMapForUser(user *api.User) map[string]interface{} {
 	updateMap := make(map[string]interface{}, 3)
 	updateMap["username"] = user.Username
-	updateMap["password"] = user.Password
 	updateMap["email"] = user.Email
 
 	return updateMap
 }
 
-func (a *usersDao) GetUserByUsername(username string) (*models.User, error) {
+func (a *usersDao) GetUserByUsername(username string) (*api.User, error) {
 	tx, err := a.s.Begin()
 	if err != nil {
 		return nil, err
 	}
 	defer tx.RollbackUnlessCommitted()
 
-	var user models.User
+	var user api.User
 	result, err := tx.Select("*").From(usersTableName).Where("username = ?", username).Load(&user)
 	if err != nil {
 		return nil, err

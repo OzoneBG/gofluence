@@ -6,6 +6,7 @@ import (
 
 	"github.com/DavidHuie/gomigrate"
 	"github.com/gocraft/dbr"
+	"github.com/ozonebg/gofluence/internal/appcontext"
 	"github.com/ozonebg/gofluence/internal/config"
 	"github.com/ozonebg/gofluence/internal/db"
 	"github.com/ozonebg/gofluence/pkg/protocol/grpc"
@@ -33,7 +34,9 @@ func RunServer() error {
 		log.WithError(err).Fatal("failed to run migrations")
 	}
 
-	userapi := api.NewUserServiceServer()
+	appContext := appcontext.NewContext(session)
+
+	userapi := api.NewUserServiceServer(appContext.UsersRepository)
 
 	// run HTTP gateway
 	go func() {
