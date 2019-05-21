@@ -53,6 +53,8 @@ func performMigration(sess *dbr.Session) error {
 		return err
 	}
 
+	// migrator.CreateMigrationsTable()
+
 	err = migrator.Migrate()
 	if err != nil {
 		return err

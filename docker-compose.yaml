@@ -2,6 +2,7 @@ version: "2"
 services:
   db:
     restart: always
+    container_name: gofluence_db
     image: postgres:11.2-alpine
     ports:
       - "5435:5432"
@@ -11,18 +12,18 @@ services:
       POSTGRES_DB: gofluence
   api:
     restart: always
-    container_name: gofluence
+    container_name: gofluence_api
     build: .
     command: go run main.go
     volumes:
       - ./:/go/src/github.com/ozonebg/gofluence/
     ports:
-      - "8080:8081"
+      - "8088:8080"
     environment:
       DB_USER: gofluence
       DB_NAME: gofluence
       DB_PWD: gofluencer
-      HTTP_PORT: 8081
+      HTTP_PORT: 8080
       TOKEN_PWD: myverylonghashedpassword
       GRPC_PORT: 9090
     depends_on:
